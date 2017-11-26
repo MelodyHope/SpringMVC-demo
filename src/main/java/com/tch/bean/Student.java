@@ -48,6 +48,14 @@ public class Student {
 	public void setAge(int age) {
 		this.age = age;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Student [name=" + name + ", age=" + age + "]";
+	}
 	
 }
 

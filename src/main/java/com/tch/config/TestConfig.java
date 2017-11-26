@@ -6,9 +6,12 @@ import org.springframework.context.annotation.Configuration;
 
 import com.tch.bean.Student;
 import com.tch.bean.Teacher;
+import com.tch.service.impl.StudentServiceImpl;
+import com.tch.service.impl.TeacherServiceImpl;
 
 //@ComponentScan(basePackages={"com.tch.action","com.tch.bean"})
-@ComponentScan(basePackages={"com.tch.bean","com.tch.service"})
+//@ComponentScan(basePackages={"com.tch.bean","com.tch.service"})
+//@ComponentScan(basePackageClasses={TeacherServiceImpl.class,StudentServiceImpl.class})
 @Configuration
 public class TestConfig {
 
