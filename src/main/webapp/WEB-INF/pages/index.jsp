@@ -8,5 +8,8 @@
 </head>
 <body>
     Hello,World!
+    <br/>
+    name:${student.name }
+    age:${student.age }
 </body>
 </html>
