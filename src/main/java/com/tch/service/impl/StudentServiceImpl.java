@@ -1,5 +1,11 @@
 package com.tch.service.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -14,8 +20,13 @@ public class StudentServiceImpl implements IStudentService {
 	
 	private static final String UPDATE_STUDENT = "update student set age = ? where name = ?";
 	
+	private static final String DELETE_STUDENT = "delete from student where name = ? or age = ?";
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private DataSource dataSource;
 	
 	public void addStudent(Student student) {
 		// TODO 自动生成的方法存根
@@ -29,6 +40,30 @@ public class StudentServiceImpl implements IStudentService {
 		// TODO 自动生成的方法存根
 		jdbcTemplate.update(UPDATE_STUDENT, student.getAge(),student.getName());
 		System.out.println("update student success!");
+	}
+	
+	public void deleteStudent(Student student){
+		Connection conn = null;
+		PreparedStatement stat = null;
+		try {
+			conn = dataSource.getConnection();
+			stat = conn.prepareStatement(DELETE_STUDENT);
+			//特别注意：这个索引是从1开始的，不是0
+			//stat.setString(0, student.getName());
+			//stat.setInt(1, student.getAge());
+			stat.setString(1, student.getName());
+			stat.setInt(2, student.getAge());
+			stat.execute();
+		} catch (SQLException e) {
+			// TODO: handle exception
+		}finally{
+			try {
+				if(conn!=null)conn.close();
+				if(stat!=null)stat.close();
+			} catch (SQLException e) {
+				// TODO: handle exception
+			}
+		}
 	}
 	
 

@@ -72,5 +72,13 @@ public class IndexController {
 		return "index";
 	}
 	
+	@RequestMapping("/delete")
+	public String deleteStudent(String name,String age){
+		student.setName(name);
+		student.setAge(Integer.parseInt(age));
+		studentService.deleteStudent(student);
+		return "index";
+	}
+	
 }
 
