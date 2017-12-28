@@ -6,6 +6,8 @@ import java.lang.reflect.Proxy;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,6 +23,8 @@ import com.tch.service.impl.StudentServiceImpl;
 @Controller
 public class IndexController {
 	
+	private static final Logger log = LoggerFactory.getLogger(IndexController.class);
+	
 	@Autowired
 	private Student student;
 	
@@ -31,6 +35,7 @@ public class IndexController {
 	private IStudentService studentService;
 
 	@RequestMapping("/index")
+	@Deprecated
 	public String list(HttpServletRequest request){
 		System.out.println("name:-->"+student.getName()+",age:-->"+student.getAge());
 		System.out.println(teacher);
@@ -49,6 +54,13 @@ public class IndexController {
 					}
 				});
 		studentServiceProxy.addStudent(student);
+		return "index";
+	}
+	
+	@RequestMapping("/idx")
+	public String newlist(HttpServletRequest request){
+		System.out.println("name:-->"+student.getName()+",age:-->"+student.getAge());
+		System.out.println(teacher);
 		return "index";
 	}
 	
