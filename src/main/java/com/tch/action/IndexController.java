@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.tch.bean.Student;
 import com.tch.bean.Teacher;
 import com.tch.service.IStudentService;
+import com.tch.service.impl.ConfigServiceImpl;
 import com.tch.service.impl.StudentServiceImpl;
 
 @Controller
@@ -33,6 +35,19 @@ public class IndexController {
 	
 	@Autowired
 	private IStudentService studentService;
+	
+	@Autowired
+	private ConfigServiceImpl configServiceImpl;
+	
+	//这里无法注入spring父容器的property，只能注入MVC容器的property
+//	@Value("${jdbc.url}")
+//	private String jdbc_url;
+	
+	@Value("${package.name1}")
+	private String packagename1;
+	
+	@Value("${package.name2}")
+	private String packagename2;
 
 	@RequestMapping("/index")
 	@Deprecated
@@ -59,8 +74,10 @@ public class IndexController {
 	
 	@RequestMapping("/idx")
 	public String newlist(HttpServletRequest request){
-		System.out.println("name:-->"+student.getName()+",age:-->"+student.getAge());
-		System.out.println(teacher);
+//		System.out.println("-->注入的jdbc_url属性值为："+jdbc_url);
+		System.out.println("通过注解@Service获取jdbc_url属性值为："+configServiceImpl.getJdbc_url());
+		System.out.println("-->注入的package.name1属性值为："+packagename1);
+		System.out.println("-->注入的package.name2属性值为："+packagename2);
 		return "index";
 	}
 	

@@ -11,13 +11,25 @@
     
     <!-- bean definitions here -->
     <!-- 可以在这里把自动扫包删掉，改成JavaConfig的@ComponentScan -->
-   <context:component-scan base-package="com.tch"></context:component-scan>
+   <context:component-scan base-package="com.tch">
+        <!-- 这个地方扫包的时候把@Controller排除掉，因为如果在Controller中使用了@Value注入其他的properties属性（非此文件声明的properties文件），
+                这里扫进去了会导致生成controller的bean时注入的properties找不到报错 -->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+   </context:component-scan>
     
     <!-- 此行语句使得resource autowired 等四个注解可以使用 -->
     <context:annotation-config/>
     
-    <!-- 配置读取外部配置文件 -->
+    <!-- 配置读取外部配置文件，这里配置的properties无法注入@Controller -->
     <context:property-placeholder location="classpath:jdbc.properties"/>
+    
+   <!--  <bean id="prop" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <array>
+                <value>/WEB-INF/conf/outprop2.properties</value>
+            </array>
+        </property>
+    </bean> -->
     
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
         destroy-method="close"
