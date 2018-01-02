@@ -1,13 +1,10 @@
 package com.tch.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.tch.bean.Student;
 import com.tch.bean.Teacher;
-import com.tch.service.impl.StudentServiceImpl;
-import com.tch.service.impl.TeacherServiceImpl;
 
 //@ComponentScan(basePackages={"com.tch.action","com.tch.bean"})
 //@ComponentScan(basePackages={"com.tch.bean","com.tch.service"})
