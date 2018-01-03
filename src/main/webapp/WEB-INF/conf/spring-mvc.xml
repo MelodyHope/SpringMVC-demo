@@ -8,28 +8,40 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd    
 	http://www.springframework.org/schema/context    http://www.springframework.org/schema/context/spring-context-3.0.xsd 
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd"
-	default-lazy-init="true">
+	default-lazy-init="false"
+	>
+	<!-- default-lazy-init延迟加载（也叫“懒加载”） -->
 	
 	<!-- 启动事务添加配置 -->
-	<context:component-scan base-package="com.tch">
+    <!-- component-scan扫包默认扫@Component、@ManagedBean、@Named注解的Bean，即使配置了context:include-filter也会扫这三个注解
+    的bean，详见ClassPathScanningCandidateComponentProvider.registerDefaultFilters方法，所以不能使用context:include-filter来保证只扫某一
+    类包，所以一般使用context:exclude-filter来排除不想扫的注解，或者使用use-default-filters=“false”直接排除默认的三个注解 -->
+	<context:component-scan base-package="com.tch" use-default-filters="false">
 	    <!-- 排除扫描service标签 -->
-	    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+	    <!-- <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/> -->
+	    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
+	
+	<!-- 当配置了<mvc:annotation-driven/>后，会自动加载org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping和
+org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter，所以如果显示的配置则需去掉配置<mvc:annotation-driven/> -->
+    <!-- 这个是SpringMVC必须要配置的，因为它声明了@RequestMapping、@RequestBody、@ResponseBody等。
+    并且，该配置默认加载很多的参数绑定方法，比如json转换解析器等。 -->
+    <mvc:annotation-driven/>
 	
 	<!-- 配置读取外部配置文件，这里配置的properties可以注入@Controller -->
     <context:property-placeholder location="classpath:outprop1.properties,/WEB-INF/conf/outprop2.properties"/>
 	
-	 <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-        <!-- 注册JASON转换器 -->
+	<!--  <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        注册JASON转换器
         <property name="messageConverters">  
             <list>  
                 <ref bean="mappingJacksonHttpMessageConverter"/>  
                 <ref bean="utf8StringHttpMessageConverter"/>
             </list>  
         </property> 
-    </bean>
+    </bean> -->
     
-    <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">  
+    <!-- <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">  
         <property name="supportedMediaTypes">  
             <list>  
                 <value>text/plain;charset=UTF-8</value>
@@ -37,8 +49,9 @@
                 <value>application/json;charset=UTF-8</value>
             </list>  
         </property>  
-    </bean>  
-    <bean id="utf8StringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+    </bean> -->
+    
+    <!-- <bean id="utf8StringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
         <property name="supportedMediaTypes">
             <list>
                 <value>text/plain;charset=UTF-8</value>
@@ -46,7 +59,7 @@
                 <value>application/json;charset=UTF-8</value>
             </list>
         </property>
-    </bean>
+    </bean> -->
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
@@ -55,10 +68,5 @@
     </bean>
 
     <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"></bean>
- 
     
-    <!-- 当配置了<mvc:annotation-driven/>后，会自动加载org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping和
-org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter，所以如果显示的配置则需去掉配置<mvc:annotation-driven/> -->
-    <!--<mvc:annotation-driven/>-->
-
 </beans>
