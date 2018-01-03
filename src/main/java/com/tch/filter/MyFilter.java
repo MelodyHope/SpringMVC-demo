@@ -32,7 +32,7 @@ public class MyFilter extends GenericFilterBean {
 	protected void initFilterBean() throws ServletException {
 		// TODO 自动生成的方法存根
 		super.initFilterBean();
-		System.out.println("Spring容器初始化方法！");
+		System.out.println("MyFilter的Spring容器初始化方法！");
 	}
 
 }

@@ -48,6 +48,9 @@ public class IndexController {
 	
 	@Value("${package.name2}")
 	private String packagename2;
+	
+	@Value("${package.name3}")
+	private String packagename3;
 
 	@RequestMapping("/index")
 	@Deprecated
@@ -78,6 +81,7 @@ public class IndexController {
 		System.out.println("通过注解@Service获取jdbc_url属性值为："+configServiceImpl.getJdbc_url());
 		System.out.println("-->注入的package.name1属性值为："+packagename1);
 		System.out.println("-->注入的package.name2属性值为："+packagename2);
+		System.out.println("-->通过MyPropertyPlaceholderConfigurer设置的package.name3属性值为："+packagename3);
 		return "index";
 	}
 	

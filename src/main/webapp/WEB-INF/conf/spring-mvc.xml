@@ -29,7 +29,25 @@ org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter，
     <mvc:annotation-driven/>
 	
 	<!-- 配置读取外部配置文件，这里配置的properties可以注入@Controller -->
-    <context:property-placeholder location="classpath:outprop1.properties,/WEB-INF/conf/outprop2.properties"/>
+    <!-- <context:property-placeholder location="classpath:outprop1.properties,/WEB-INF/conf/outprop2.properties"/> -->
+    
+    <!-- <bean id="prop" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+                <array>
+                    <value>classpath:outprop1.properties</value>
+                    <value>/WEB-INF/conf/outprop2.properties</value>
+                </array>
+        </property>
+    </bean> -->
+    
+    <bean id="prop" class="com.tch.config.MyPropertyPlaceholderConfigurer">
+        <property name="locations">
+                <array>
+                    <value>classpath:outprop1.properties</value>
+                    <value>/WEB-INF/conf/outprop2.properties</value>
+                </array>
+        </property>
+    </bean>
 	
 	<!--  <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         注册JASON转换器
