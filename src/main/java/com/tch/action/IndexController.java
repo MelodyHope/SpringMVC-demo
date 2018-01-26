@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +39,9 @@ public class IndexController {
 	
 	@Autowired
 	private ConfigServiceImpl configServiceImpl;
+	
+	@Autowired
+	private Environment env;
 	
 	//这里无法注入spring父容器的property，只能注入MVC容器的property
 //	@Value("${jdbc.url}")
@@ -82,6 +86,8 @@ public class IndexController {
 		System.out.println("-->注入的package.name1属性值为："+packagename1);
 		System.out.println("-->注入的package.name2属性值为："+packagename2);
 		System.out.println("-->通过MyPropertyPlaceholderConfigurer设置的package.name3属性值为："+packagename3);
+		String s = env.getProperty("user.home");//Environment可以获取一些系统的配置信息，不过这个bean在哪配置的还没搞清楚……
+		System.out.println(s);
 		return "index";
 	}
 	
