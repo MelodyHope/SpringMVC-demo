@@ -1,0 +1,17 @@
+# Maven #
+target/
+
+# gradle #
+.gradle
+build/
+
+# IDEA #
+.idea/
+*.iml
+
+# Eclipse #
+.settings/
+.metadata/
+.classpath
+.project
+Servers/
