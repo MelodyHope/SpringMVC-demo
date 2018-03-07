@@ -47,6 +47,7 @@ org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter，
                     <value>/WEB-INF/conf/outprop2.properties</value>
                 </array>
         </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
     </bean>
 	
 	<!--  <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">

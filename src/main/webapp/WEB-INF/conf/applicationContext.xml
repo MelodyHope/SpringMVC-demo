@@ -21,7 +21,7 @@
     <context:annotation-config/>
     
     <!-- 配置读取外部配置文件，这里配置的properties无法注入@Controller -->
-    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
     
    <!--  <bean id="prop" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">

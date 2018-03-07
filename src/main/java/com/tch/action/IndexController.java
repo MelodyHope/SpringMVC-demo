@@ -55,6 +55,9 @@ public class IndexController {
 	
 	@Value("${package.name3}")
 	private String packagename3;
+	
+	@Value("${package.name4}")
+	private String packagename4;
 
 	@RequestMapping("/index")
 	@Deprecated
