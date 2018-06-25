@@ -1,4 +1,5 @@
-package com.tch.action;
+package com.tch.test;
+
 
 
 //public class Test1 {
@@ -59,4 +60,5 @@ class Graph1 extends Graph {
 															// 而且是由父类的构造函数直接调过来的，所以并没有进行radiu=1的赋值操作
 	}
 }
+
 
