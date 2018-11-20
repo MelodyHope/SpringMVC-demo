@@ -3,6 +3,7 @@ package com.tch.action;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +17,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tch.bean.Student;
 import com.tch.bean.Teacher;
@@ -120,6 +122,12 @@ public class IndexController {
 		student.setAge(Integer.parseInt(age));
 		studentService.deleteStudent(student);
 		return "index";
+	}
+	
+	@RequestMapping("/query")
+	@ResponseBody
+	public List<Student> queryStudentByName(@RequestParam("name")String name) {
+		return studentService.queryStudentByName(name);
 	}
 	
 }

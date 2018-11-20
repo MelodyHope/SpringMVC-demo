@@ -81,10 +81,16 @@
     
     <!-- jackson jar -->
     <dependency>
-        <groupId>org.codehaus.jackson</groupId>
-        <artifactId>jackson-jaxrs</artifactId>
-        <version>1.9.11</version>
-    </dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-databind</artifactId>
+	    <version>2.8.5</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>com.alibaba</groupId>
+	    <artifactId>fastjson</artifactId>
+	    <version>1.2.23</version>
+	</dependency>
 
     <!-- commons jar -->
     <dependency>

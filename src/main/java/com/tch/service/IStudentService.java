@@ -1,5 +1,7 @@
 package com.tch.service;
 
+import java.util.List;
+
 import com.tch.bean.Student;
 
 
@@ -9,5 +11,7 @@ public interface IStudentService {
 	void updateStudent(Student student);
 
 	void deleteStudent(Student student);
+
+	List<Student> queryStudentByName(String name);
 }
 

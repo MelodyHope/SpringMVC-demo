@@ -5,9 +5,9 @@
 	xmlns:p="http://www.springframework.org/schema/p"    
 	xmlns:context="http://www.springframework.org/schema/context" 
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd    
-	http://www.springframework.org/schema/context    http://www.springframework.org/schema/context/spring-context-3.0.xsd 
-	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans    http://www.springframework.org/schema/beans/spring-beans-4.3.xsd    
+	http://www.springframework.org/schema/context    http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd"
 	default-lazy-init="false"
 	>
 	<!-- default-lazy-init延迟加载（也叫“懒加载”） -->
@@ -50,35 +50,77 @@ org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter，
         <property name="ignoreUnresolvablePlaceholders" value="true" />
     </bean>
 	
-	<!--  <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-        注册JASON转换器
-        <property name="messageConverters">  
-            <list>  
-                <ref bean="mappingJacksonHttpMessageConverter"/>  
-                <ref bean="utf8StringHttpMessageConverter"/>
-            </list>  
-        </property> 
-    </bean> -->
-    
-    <!-- <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">  
-        <property name="supportedMediaTypes">  
-            <list>  
-                <value>text/plain;charset=UTF-8</value>
-                <value>text/html;charset=UTF-8</value>  
-                <value>application/json;charset=UTF-8</value>
-            </list>  
-        </property>  
-    </bean> -->
-    
-    <!-- <bean id="utf8StringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
-        <property name="supportedMediaTypes">
-            <list>
-                <value>text/plain;charset=UTF-8</value>
-                <value>text/html;charset=UTF-8</value>
-                <value>application/json;charset=UTF-8</value>
-            </list>
-        </property>
-    </bean> -->
+	<!--采用以下配置支持controller中返回String，否则会当成是视图名称和路劲处理-->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+	    <property name="messageConverters">
+	        <list>
+	            <!-- String结果数据支持，此解析器要放在JSON解析器前 -->
+	            <ref bean="stringHttpMessageConverter"/>
+	            <!-- JSON结果数据支持(使用fastjson) -->
+	            <ref bean="fastJsonHttpMessageConverter"/>
+	            <!-- JSON结果数据支持(使用jackson) -->
+	            <!-- <ref bean="mappingJacksonHttpMessageConverter" /> -->
+	        </list>
+	    </property>
+	</bean>
+	<!-- String转化器 -->
+	<bean id="stringHttpMessageConverter"
+	      class="org.springframework.http.converter.StringHttpMessageConverter">
+	    <property name="supportedMediaTypes">
+	        <list>
+	            <!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 -->
+	            <value>text/html;charset=UTF-8</value>
+	            <value>application/json;charset=UTF-8</value>
+	        </list>
+	    </property>
+	</bean>
+	<!-- JSON转化器(jackson版本) -->
+	<bean id="mappingJacksonHttpMessageConverter"
+	      class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+	    <property name="objectMapper">
+	        <!-- <bean class="com.threeStepTech.ObjectMapper.CustomObjectMapper"/> -->
+	        <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+	            <property name="dateFormat">
+	                <bean class="java.text.SimpleDateFormat">
+	                    <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"/>
+	                </bean>
+	            </property>
+	            <property name="serializationInclusion">
+	                <!-- 注入枚举类型,过滤对象，这样JSON中不会输出null -->
+	                <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+	            </property>
+	        </bean>
+	    </property>
+	    <property name="supportedMediaTypes">
+	        <list>
+	            <!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 -->
+	            <value>text/html;charset=UTF-8</value>
+	            <value>application/json;charset=UTF-8</value>
+	        </list>
+	    </property>
+	</bean>
+	<!-- JSON转化器(fastjson版本) -->
+	<bean id="fastJsonHttpMessageConverter"
+	      class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4">
+	    <property name="supportedMediaTypes">
+	        <list>
+	            <!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 -->
+	            <value>text/html;charset=UTF-8</value>
+	            <value>application/json;charset=UTF-8</value>
+	        </list>
+	    </property>
+	    <property name="fastJsonConfig">
+	        <bean class="com.alibaba.fastjson.support.config.FastJsonConfig">
+	            <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"/>
+	            <property name="serializerFeatures">
+	                <array>
+	                    <!--此配置用于将Date类型转化为dateFormat对应的格式-->
+	                    <value>WriteDateUseDateFormat</value>
+	                </array>
+	            </property>
+	        </bean>
+	    </property>
+	</bean>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>

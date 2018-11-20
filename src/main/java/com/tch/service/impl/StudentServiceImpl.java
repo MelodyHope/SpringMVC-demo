@@ -3,10 +3,12 @@ package com.tch.service.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ public class StudentServiceImpl implements IStudentService {
 	private static final String UPDATE_STUDENT = "update student set age = ? where name = ?";
 	
 	private static final String DELETE_STUDENT = "delete from student where name = ? or age = ?";
+	
+	private static final String SELECT_STUDENT = "select * from student where name = ?";
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -42,6 +46,7 @@ public class StudentServiceImpl implements IStudentService {
 		System.out.println("update student success!");
 	}
 	
+	@Override
 	public void deleteStudent(Student student){
 		Connection conn = null;
 		PreparedStatement stat = null;
@@ -64,6 +69,12 @@ public class StudentServiceImpl implements IStudentService {
 				// TODO: handle exception
 			}
 		}
+	}
+	
+	@Override
+	public List<Student> queryStudentByName(String name) {
+		List<Student> students = jdbcTemplate.query(SELECT_STUDENT, new BeanPropertyRowMapper(Student.class), name);
+		return students;
 	}
 	
 
