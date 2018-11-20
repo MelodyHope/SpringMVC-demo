@@ -115,7 +115,7 @@ public class IndexController {
 	}
 	
 	@RequestMapping("/delete")
-	public String deleteStudent(String name,String age){
+	public String deleteStudent(@RequestParam("name")String name, @RequestParam("age")String age){
 		student.setName(name);
 		student.setAge(Integer.parseInt(age));
 		studentService.deleteStudent(student);
