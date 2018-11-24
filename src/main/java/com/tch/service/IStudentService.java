@@ -12,6 +12,8 @@ public interface IStudentService {
 
 	void deleteStudent(Student student);
 
-	List<Student> queryStudentByName(String name);
+	List<Student> queryStudents();
+
+	Student queryStudentWithName(String name);
 }
 

@@ -24,7 +24,9 @@ public class StudentServiceImpl implements IStudentService {
 	
 	private static final String DELETE_STUDENT = "delete from student where name = ? or age = ?";
 	
-	private static final String SELECT_STUDENT = "select * from student where name = ?";
+	private static final String SELECT_STUDENT_SINGLE = "select * from student where name = ?";
+	
+	private static final String SELECT_STUDENT_ALL = "select * from student";
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -72,11 +74,16 @@ public class StudentServiceImpl implements IStudentService {
 	}
 	
 	@Override
-	public List<Student> queryStudentByName(String name) {
-		List<Student> students = jdbcTemplate.query(SELECT_STUDENT, new BeanPropertyRowMapper(Student.class), name);
+	public List<Student> queryStudents() {
+		List<Student> students = jdbcTemplate.query(SELECT_STUDENT_ALL, new BeanPropertyRowMapper<>(Student.class));
 		return students;
 	}
 	
+	@Override
+	public Student queryStudentWithName(String name) {
+		Student student = jdbcTemplate.queryForObject(SELECT_STUDENT_SINGLE, new BeanPropertyRowMapper<>(Student.class), name);
+		return student;
+	}
 
 }
 

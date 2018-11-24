@@ -124,10 +124,16 @@ public class IndexController {
 		return "index";
 	}
 	
-	@RequestMapping("/query")
+	@RequestMapping("/queryByName")
 	@ResponseBody
-	public List<Student> queryStudentByName(@RequestParam("name")String name) {
-		return studentService.queryStudentByName(name);
+	public Student queryStudentByName(@RequestParam("name")String name) {
+		return studentService.queryStudentWithName(name);
+	}
+	
+	@RequestMapping("/queryAll")
+	@ResponseBody
+	public List<Student> queryStudents() {
+		return studentService.queryStudents();
 	}
 	
 }

@@ -1,6 +1,6 @@
 package com.tch.bean;
 
-
+//@XmlRootElement
 public class Student {
 
 	private String name;
