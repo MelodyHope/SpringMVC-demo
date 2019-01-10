@@ -4,10 +4,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
     xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:tx="http://www.springframework.org/schema/tx"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd 
-    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd 
-    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd 
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
     
     <!-- bean definitions here -->
     <!-- 可以在这里把自动扫包删掉，改成JavaConfig的@ComponentScan -->
@@ -20,6 +20,8 @@
     <!-- 此行语句使得resource autowired 等四个注解可以使用 -->
     <context:annotation-config/>
     
+    <!-- <aop:aspectj-autoproxy proxy-target-class="false" expose-proxy="false"/> -->
+    
     <!-- 配置读取外部配置文件，这里配置的properties无法注入@Controller -->
     <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
     
@@ -31,10 +33,21 @@
         </property>
     </bean> -->
     
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+    <!-- dbcp连接池 -->
+    <!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
         destroy-method="close"
         p:driverClassName="${jdbc.driverClassName}" p:url="${jdbc.url}"
-        p:username="${jdbc.username}" p:password="${jdbc.password}" />
+        p:username="${jdbc.username}" p:password="${jdbc.password}" /> -->
+        
+	<!-- alibaba druid连接池 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+    	p:driverClassName="${jdbc.driverClassName}" p:url="${jdbc.url}"
+    	p:username="${jdbc.username}" p:password="${jdbc.password}"
+    	p:initialSize="0" p:maxActive="10" p:maxIdle="0" p:maxWait="60000"
+    	p:validationQuery="SELECT 1" p:testOnBorrow="false" p:testOnReturn="false" p:testWhileIdle="true"
+    	p:timeBetweenEvictionRunsMillis="60000" p:minEvictableIdleTimeMillis="25200000"
+    	p:removeAbandoned="true" p:removeAbandonedTimeout="1800" p:logAbandoned="true"
+    	p:filter="mergeStat"/>
      
      <!-- 实例化jdbcTemplate,同时注入数据源 -->  
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
@@ -45,6 +58,21 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
     
+    <bean name="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+    	p:configLocation="classpath:mybatisconfig-spring.xml"
+    	p:dataSource-ref="dataSource"/>
+    	
+   <!-- 	<bean name="studentMapper" class="org.mybatis.spring.mapper.MapperFactoryBean"
+   		p:mapperInterface="com.tch.mybatis.mapper.StudentMapper"
+   		p:sqlSessionFactory-ref="sqlSessionFactory"/>
+    	
+   	<bean name="teacherMapper" class="org.mybatis.spring.mapper.MapperFactoryBean"
+   		p:mapperInterface="com.tch.mybatis.mapper.TeacherMapper"
+   		p:sqlSessionFactory-ref="sqlSessionFactory"/> -->
+   		
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"
+    	p:basePackage="com.tch.mybatis.mapper"/>
+    
     <!-- 事务扫描开始(开启@Tranctional) -->
     <tx:annotation-driven transaction-manager="txManager"/>
     
@@ -53,5 +81,5 @@
     
     <!-- 引用其他资源文件 -->
     <!-- <import resource="other-config.xml"/> -->
-
+    
 </beans>

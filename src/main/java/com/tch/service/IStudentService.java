@@ -15,5 +15,9 @@ public interface IStudentService {
 	List<Student> queryStudents();
 
 	Student queryStudentWithName(String name);
+
+	Student queryStudentWithNameMybatis(String name);
+
+	void addStudentMybatis(Student student);
 }
 

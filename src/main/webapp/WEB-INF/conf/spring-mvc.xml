@@ -24,8 +24,7 @@
 	
 	<!-- 当配置了<mvc:annotation-driven/>后，会自动加载org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping和
 org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter，所以如果显示的配置则需去掉配置<mvc:annotation-driven/> -->
-    <!-- 这个是SpringMVC必须要配置的，因为它声明了@RequestMapping、@RequestBody、@ResponseBody等。
-    并且，该配置默认加载很多的参数绑定方法，比如json转换解析器等。 -->
+    <!-- 这个是SpringMVC必须要配置的，因为它声明了@RequestMapping、@RequestBody、@ResponseBody等。 并且，该配置默认加载很多的参数绑定方法，比如json转换解析器等。 -->
     <mvc:annotation-driven/>
 	
 	<!-- 配置读取外部配置文件，这里配置的properties可以注入@Controller -->

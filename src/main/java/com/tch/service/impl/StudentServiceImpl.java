@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tch.bean.Student;
+import com.tch.mybatis.mapper.StudentMapper;
 import com.tch.service.IStudentService;
 
 @Service
@@ -33,6 +35,9 @@ public class StudentServiceImpl implements IStudentService {
 	
 	@Autowired
 	private DataSource dataSource;
+	
+	@Autowired
+	private StudentMapper studentMapper;
 	
 	public void addStudent(Student student) {
 		// TODO 自动生成的方法存根
@@ -83,6 +88,18 @@ public class StudentServiceImpl implements IStudentService {
 	public Student queryStudentWithName(String name) {
 		Student student = jdbcTemplate.queryForObject(SELECT_STUDENT_SINGLE, new BeanPropertyRowMapper<>(Student.class), name);
 		return student;
+	}
+	
+	@Override
+	@Transactional
+	public Student queryStudentWithNameMybatis(String name) {
+		Student student = studentMapper.getStudent(name);
+		return student;
+	}
+	
+	@Override
+	public void addStudentMybatis(Student student) {
+		studentMapper.insertStudent(student);
 	}
 
 }

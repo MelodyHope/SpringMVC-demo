@@ -60,7 +60,7 @@ public class IndexController {
 	
 	@Value("${package.name4}")
 	private String packagename4;
-
+	
 	@RequestMapping("/index")
 	@Deprecated
 	public String list(HttpServletRequest request){
@@ -134,6 +134,20 @@ public class IndexController {
 	@ResponseBody
 	public List<Student> queryStudents() {
 		return studentService.queryStudents();
+	}
+	
+	@RequestMapping("/addMybatis")
+	@ResponseBody
+	public Student addStudentMybatis(String name, int age) {
+		Student student = new Student(name, age);
+		studentService.addStudentMybatis(student);
+		return student;
+	}
+	
+	@RequestMapping("/queryByNameMybatis")
+	@ResponseBody
+	public Student queryStudentMybatis(String name) {
+		return studentService.queryStudentWithNameMybatis(name);
 	}
 	
 }
