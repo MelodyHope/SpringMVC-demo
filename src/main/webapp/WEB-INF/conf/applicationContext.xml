@@ -47,7 +47,7 @@
     	p:validationQuery="SELECT 1" p:testOnBorrow="false" p:testOnReturn="false" p:testWhileIdle="true"
     	p:timeBetweenEvictionRunsMillis="60000" p:minEvictableIdleTimeMillis="25200000"
     	p:removeAbandoned="true" p:removeAbandonedTimeout="1800" p:logAbandoned="true"
-    	p:filter="mergeStat"/>
+    	p:filters="mergeStat"/>
      
      <!-- 实例化jdbcTemplate,同时注入数据源 -->  
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
@@ -81,5 +81,30 @@
     
     <!-- 引用其他资源文件 -->
     <!-- <import resource="other-config.xml"/> -->
+    
+     <!-- spring rmi远程方法调用 -->
+    <bean id="rmiService" class="com.tch.rmi.impl.TestRmiServiceImpl"/>
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter"
+    	p:service-ref="rmiService" p:serviceName="testRmi"
+    	p:serviceInterface="com.tch.rmi.TestRmiService"
+    	p:registryPort="1199"/>
+    	
+   	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"
+   		p:brokerURL="tcp://localhost:61616"/>
+   		
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate"
+		p:connectionFactory-ref="connectionFactory"/>
+		
+	<bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0">
+			<value>HelloWorldQuene</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- <bean id="testActiveMQListener" class="com.tch.activemq.TestActiveMQListener"></bean> -->
+	
+	<!-- 注解扫包、JavaConfig方式和xml配置文件混用 -->
+	<bean id="messageConsumer" class="org.springframework.jms.listener.DefaultMessageListenerContainer"
+		p:connectionFactory-ref="connectionFactory" p:destination-ref="destination" p:messageListener-ref="testActiveMQListener"></bean>
     
 </beans>
