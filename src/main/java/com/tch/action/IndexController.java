@@ -1,13 +1,11 @@
 package com.tch.action;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.List;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,17 +72,23 @@ public class IndexController {
 		System.out.println(teacher);
 		studentService.addStudent(student);
 		IStudentService studentServiceProxy = (IStudentService)Proxy.newProxyInstance(StudentServiceImpl.class.getClassLoader(), new Class[]{IStudentService.class}, 
-				new InvocationHandler() {
-					
-					public Object invoke(Object proxy, Method method, Object[] args)
-							throws Throwable {
-						// TODO 自动生成的方法存根
-						if("addStudent".equals(method.getName())){
-							System.out.println("-->via proxy");
-							method.invoke(studentService, args);
-						}
-						return null;
+//				new InvocationHandler() {
+//					
+//					public Object invoke(Object proxy, Method method, Object[] args)
+//							throws Throwable {
+//						// TODO 自动生成的方法存根
+//						if("addStudent".equals(method.getName())){
+//							System.out.println("-->via proxy");
+//							method.invoke(studentService, args);
+//						}
+//						return null;
+//					}
+				(Object proxy, Method method, Object[] args) -> {
+					if("addStudent".equals(method.getName())){
+						System.out.println("-->via proxy");
+						method.invoke(studentService, args);
 					}
+					return null;
 				});
 		studentServiceProxy.addStudent(student);
 		return "index";
@@ -165,14 +168,18 @@ public class IndexController {
 	
 	@RequestMapping("/activemq")
 	public String activemqTest(String message) throws JMSException {
-		jmsTemplate.send(destination, new MessageCreator() {
-			
-			@Override
-			public Message createMessage(Session session) throws JMSException {
-				// TODO Auto-generated method stub
-				return session.createTextMessage("spring整合activemq发送测试:"+message);
-			}
-		});
+		jmsTemplate.send(destination, (Session session) -> {
+			return session.createTextMessage("spring整合activemq发送测试:"+message);
+		}
+//		new MessageCreator() {
+//			
+//			@Override
+//			public Message createMessage(Session session) throws JMSException {
+//				// TODO Auto-generated method stub
+//				return session.createTextMessage("spring整合activemq发送测试:"+message);
+//			}
+//		}
+		);
 		
 		TextMessage textMessage =  (TextMessage) jmsTemplate.receive(destination);
 		System.out.println("spring整合activemq接收测试:"+textMessage.getText());
